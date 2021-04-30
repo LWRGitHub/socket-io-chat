@@ -13,7 +13,6 @@ This is a web app that uses Socket.io in order to send messages back & forth wit
 ## Install/Setup
 
 ### Install
-***make sure you have***
 ```
 npm install
 ```
