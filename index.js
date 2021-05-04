@@ -10,8 +10,15 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+    socket.on('new user', (msg) => {
+        io.emit('new user', msg);
+        console.log('here')
+    });
     socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
+    });
+    socket.on('typing', (msg) => {
+        io.emit('typing', msg);
     });
 });
 

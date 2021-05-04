@@ -22,6 +22,8 @@
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
 
+    <div id="typing"></div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
       let socket = io();
@@ -29,6 +31,15 @@
       let messages = document.getElementById('messages');
       let form = document.getElementById('form');
       let input = document.getElementById('input');
+      let typing = document.getElementById('typing');
+      let count = 1;
+      
+      input.addEventListener('keydown', function(e) {
+        socket.emit('typing', true);
+        // Object.keys(io.sockets.sockets).forEach(function(id) {
+        //   console.log("ID:",id)  // socketId
+        // })
+      });
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -43,6 +54,37 @@
         item.textContent = msg;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
+        socket.emit('typing', false);
+
+      });
+
+      window.onload = function() {
+        console.log('window works')
+        var item = document.createElement('li');
+        count++
+        item.textContent = `User has joined`;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+      input.addEventListener('keydown', function(e) {
+        socket.emit('typing', true);
+      });
+
+      socket.on('new user', function(newUser) {
+        var item = document.createElement('li');
+        item.textContent = `User${count}`;
+        count++
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      socket.on('typing', function(msg) {
+        if(msg){
+          typing.textContent = "typing..."
+          console.log("typing", msg)
+        } else{
+          typing.textContent = ""
+        }
       });
 
     </script>
